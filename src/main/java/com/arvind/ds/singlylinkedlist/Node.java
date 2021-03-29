@@ -1,4 +1,4 @@
-package com.arvind.ds;
+package com.arvind.ds.singlylinkedlist;
 
 public class Node {
 	
