@@ -1,10 +1,21 @@
 package com.arvind.ds.singlylinkedlist;
 
-public class SinglyLinkedList {
-	private int size = 0;
-	private Node head;
+import java.util.Arrays;
 
-	public Node getHead() {
+public class SinglyLinkedList<T> {
+
+	private int size = 0;
+	private Node<T> head;
+
+	public SinglyLinkedList() {
+
+	}
+
+	public SinglyLinkedList(T... entries) {
+		Arrays.stream(entries).forEach(this::add);
+	}
+
+	public Node<T> getHead() {
 		return head;
 	}
 
@@ -12,42 +23,26 @@ public class SinglyLinkedList {
 		return size;
 	}
 
-	public void add(Node n) {
-		insert(size, n);
-	}
-	
-	public void insert(int i, Node n) {
-		if(i == 0) {
-			n.setNext(head);
-			head = n;
-		} else {
-			Node nodeBeforeIthNode = get(i-1);
-			Node ithNode = nodeBeforeIthNode.getNext();
-			n.setNext(ithNode);
-			nodeBeforeIthNode.setNext(n);
-		}
-		size++;
+	public void add(T entry) {
+		insert(size, entry);
 	}
 
-	public Node get(int i) {
-		int currPos = 0;
-		Node currentNode = head;
-		
-		while(currPos < i) {
-			currentNode = currentNode.getNext();
-			currPos++;
-		}
-		return currentNode;
+	public void insert(int i, T entry) {
+		insert(i, new Node<T>(entry));
+	}
+
+	public T get(int i) {
+		return getNodeAt(i).getData();
 	}
 
 	public void delete(int i) {
-		if(i ==0 ) {
-			Node temp = head;
+		if (i == 0) {
+			Node<T> temp = head;
 			head = head.getNext();
 			temp.setNext(null);
 		} else {
-			Node nodeBeforeIthNode = get(i-1);
-			Node ithNode = nodeBeforeIthNode.getNext();
+			Node<T> nodeBeforeIthNode = getNodeAt(i - 1);
+			Node<T> ithNode = nodeBeforeIthNode.getNext();
 			nodeBeforeIthNode.setNext(ithNode.getNext());
 			ithNode.setNext(null);
 		}
@@ -55,10 +50,10 @@ public class SinglyLinkedList {
 	}
 
 	public void reverse() {
-		Node prev = null;
-		Node current = head;
-		Node next = null;
-		while(current!=null) {
+		Node<T> prev = null;
+		Node<T> current = head;
+		Node<T> next = null;
+		while (current != null) {
 			next = current.getNext();
 			current.setNext(prev);
 			prev = current;
@@ -66,17 +61,41 @@ public class SinglyLinkedList {
 		}
 		head = prev;
 	}
-	
+
 	public void reverseRecursive() {
 		reverseRecursive(head);
 	}
-	
-	private void reverseRecursive(Node current) {
-		if(current.getNext() == null) {
+
+	private void insert(int i, Node<T> n) {
+		if (i == 0) {
+			n.setNext(head);
+			head = n;
+		} else {
+			Node<T> nodeBeforeIthNode = getNodeAt(i - 1);
+			Node<T> ithNode = nodeBeforeIthNode.getNext();
+			n.setNext(ithNode);
+			nodeBeforeIthNode.setNext(n);
+		}
+		size++;
+	}
+
+	private Node<T> getNodeAt(int i) {
+		int currPos = 0;
+		Node<T> currentNode = head;
+
+		while (currPos < i) {
+			currentNode = currentNode.getNext();
+			currPos++;
+		}
+		return currentNode;
+	}
+
+	private void reverseRecursive(Node<T> current) {
+		if (current.getNext() == null) {
 			head = current;
 			return;
 		}
-		Node next = current.getNext();
+		Node<T> next = current.getNext();
 		reverseRecursive(next);
 		next.setNext(current);
 		current.setNext(null);

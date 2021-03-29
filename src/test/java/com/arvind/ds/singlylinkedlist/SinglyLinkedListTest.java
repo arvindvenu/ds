@@ -3,180 +3,131 @@ package com.arvind.ds.singlylinkedlist;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.util.stream.IntStream;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.arvind.ds.singlylinkedlist.SinglyLinkedList;
-import com.arvind.ds.singlylinkedlist.Node;
-
 @RunWith(JUnit4.class)
 public class SinglyLinkedListTest {
-	SinglyLinkedList list = new SinglyLinkedList();
-	
+	SinglyLinkedList<Integer> list = new SinglyLinkedList<>();
+
 	@Test
 	public void test_EmptyLinkedList() {
 		assertNull(list.getHead());
 		assertEquals(0, list.size());
 	}
-	
+
 	@Test
 	public void test_AddSingleNodeToList() {
-		Node n = new Node();
-		list.add(n);
-		assertEquals( n, list.getHead());
-		assertEquals(1,list.size());
-		assertNull(list.getHead().getNext());
-		assertEquals(n, list.get(0));
+		Node<Integer> n = new Node<>(1);
+		list.add(1);
+		assertOrderAndSize(n);
 	}
-	
+
 	@Test
 	public void test_AddTwoNodesToList() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		assertEquals( n1, list.getHead());
-		assertEquals(n2, n1.getNext());
-		assertEquals(2,list.size());
-		assertEquals(n1, list.get(0));
-		assertEquals(n2, list.get(1));
+		Node<Integer> n1 = new Node<>(1);
+		list.add(1);
+		Node<Integer> n2 = new Node<>(2);
+		list.add(2);
+		assertOrderAndSize(n1, n2);
 	}
-	
+
 	@Test
 	public void test_InsertElementSomewhereInBetween() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.insert(1,n3);
-		assertEquals( n1, list.getHead());
-		assertEquals(n3, n1.getNext());
-		assertEquals(3,list.size());
-		assertEquals(n1, list.get(0));
-		assertEquals(n3, list.get(1));
-		assertEquals(n2, list.get(2));
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n2 = new Node<>(2);
+		list = new SinglyLinkedList<Integer>(1, 2);
+		Node<Integer> n3 = new Node<>(3);
+		list.insert(1, 3);
+		assertOrderAndSize(n1, n3, n2);
 	}
-	
+
 	@Test
 	public void test_InsertElementAtTheBeginning() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.insert(0,n3);
-		assertEquals( n3, list.getHead());
-		assertEquals(n1, n3.getNext());
-		assertEquals(3,list.size());
-		assertEquals(n3, list.get(0));
-		assertEquals(n1, list.get(1));
-		assertEquals(n2, list.get(2));
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n2 = new Node<>(2);
+		list = new SinglyLinkedList<Integer>(1, 2);
+		Node<Integer> n3 = new Node<>(3);
+		list.insert(0, 3);
+		assertOrderAndSize(n3, n1, n2);
 	}
-	
+
 	@Test
 	public void test_InsertElementAtTheLast() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.insert(2,n3);
-		assertEquals( n1, list.getHead());
-		assertEquals(3,list.size());
-		assertEquals(n1, list.get(0));
-		assertEquals(n2, list.get(1));
-		assertEquals(n3, list.get(2));	
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n2 = new Node<>(2);
+		list = new SinglyLinkedList<Integer>(1, 2);
+		Node<Integer> n3 = new Node<>(3);
+		list.insert(2, 3);
+		assertOrderAndSize(n1, n2, n3);
 	}
-	
+
 	@Test
 	public void test_DeleteSomeNodeInBetween() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.add(n3);
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n3 = new Node<>(3);
+		list = new SinglyLinkedList<Integer>(1, 2, 3);
 		list.delete(1);
-		assertEquals(2, list.size());
-		assertEquals(n1, list.getHead());
-		assertEquals(n3, n1.getNext());
-		assertNull(n2.getNext());
+		assertOrderAndSize(n1, n3);
 	}
-	
+
 	@Test
 	public void test_DeleteLastNode() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.add(n3);
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n2 = new Node<>(2);
+		list = new SinglyLinkedList<Integer>(1, 2, 3);
 		list.delete(2);
-		assertEquals(2, list.size());
-		assertEquals(n1, list.getHead());
-		assertEquals(n2, n1.getNext());
-		assertNull(n2.getNext());
+		assertOrderAndSize(n1, n2);
 	}
-	
+
 	@Test
 	public void test_DeleteHeadNode() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.add(n3);
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n2 = new Node<>(2);
+		Node<Integer> n3 = new Node<>(3);
+		list = new SinglyLinkedList<Integer>(1, 2, 3);
 		list.delete(0);
-		assertEquals(2, list.size());
-		assertEquals(n2, list.getHead());
-		assertNull(n1.getNext());
+		assertOrderAndSize(n2, n3);
 	}
-	
+
 	@Test
 	public void test_Reverse() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.add(n3);
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n2 = new Node<>(2);
+		Node<Integer> n3 = new Node<>(3);
+		list = new SinglyLinkedList<Integer>(1, 2, 3);
 		list.reverse();
-		assertEquals(n3, list.getHead());
-		assertEquals(n2, list.get(1));
-		assertEquals(n1, list.get(2));
+		assertOrderAndSize(n3, n2, n1);
 	}
-	
+
 	@Test
 	public void test_ReverseRecursive() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.add(n3);
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n2 = new Node<>(2);
+		Node<Integer> n3 = new Node<>(3);
+		list = new SinglyLinkedList<Integer>(1, 2, 3);
 		list.reverseRecursive();
-		assertEquals(n3, list.getHead());
-		assertEquals(n2, list.get(1));
-		assertEquals(n1, list.get(2));
+		assertOrderAndSize(n3, n2, n1);
 	}
-	
+
 	@Test
 	public void test_ReverseRecursive_4Nodes() {
-		Node n1 = new Node();
-		list.add(n1);
-		Node n2 = new Node();
-		list.add(n2);
-		Node n3 = new Node();
-		list.add(n3);
-		Node n4 = new Node();
-		list.add(n4);
+		Node<Integer> n1 = new Node<>(1);
+		Node<Integer> n2 = new Node<>(2);
+		Node<Integer> n3 = new Node<>(3);
+		Node<Integer> n4 = new Node<>(4);
+		list = new SinglyLinkedList<Integer>(1, 2, 3, 4);
 		list.reverseRecursive();
-		assertEquals(n4, list.getHead());
-		assertEquals(n3, list.get(1));
-		assertEquals(n2, list.get(2));
-		assertEquals(n1, list.get(3));
+		assertOrderAndSize(n4, n3, n2, n1);
+	}
+
+	private void assertOrderAndSize(Node<Integer>... nodes) {
+		assertEquals(list.getHead(), nodes[0]);
+		IntStream.range(0, nodes.length).forEach(i -> assertEquals(nodes[i], new Node<Integer>(list.get(i))));
+		assertEquals(nodes.length, list.size());
 	}
 
 }
